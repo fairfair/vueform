@@ -10,7 +10,7 @@
         <label for="file-upload" class="w-full cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
           <span>Sélectionnez</span>
           <input id="file-upload" name="file-upload" type="file" class="sr-only" @change="uploadFile"/>
-          <span class="pl-1 text-gray-600">ou glissez-déposez votre {{ label}}</span>
+          <span class="pl-1 text-gray-600">ou glissez-déposez votre <br><span class="font-bold lowercase">{{ label}}</span></span>
         </label>
       </div>
       <p class="text-sm text-gray-400 italic">{{ description }}</p>
@@ -25,12 +25,10 @@
         </div>
       </div>
 
-      <div v-if="existingFile || loadedFile">
-        <button @click="openFile" class="btn-primary w-full my-3">
-          Voir le fichier
-           <EyeIcon class="w-6 h-6 mx-3"></EyeIcon> 
-          </button>
-      </div>
+      <button @click="openFile" class="btn-primary w-full my-3" v-if="availableFile">
+        Voir le fichier
+          <EyeIcon class="w-6 h-6 mx-3"></EyeIcon> 
+        </button>
     </div>
 </template>
 
@@ -40,15 +38,28 @@ import { XIcon, ArrowCircleUpIcon, EyeIcon } from '@heroicons/vue/outline';
 
 export default {
   props: {
-    existingFile: String,
-    label: String,
-    description: String,
+    label: {
+      type: String,
+      default: 'document',
+    },
+    description: {
+      type: String,
+      default: '',
+    },
+    availableFile: {
+      type: Boolean,
+      default: true,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
       XIcon, ArrowCircleUpIcon, EyeIcon
   },
 
-  setup(props, { emit }) {
+  setup(props, { emit, $http }) {
     let loadedFile = ref();
 
     const getContent = (img) => img.split(',')[1];
@@ -61,9 +72,12 @@ export default {
 
     const dropFile = (event) => convertFileAsUrl(event.dataTransfer.files);
 
-    const openFile = () => {
-      const value = loadedFile.value !== undefined ? loadedFile.value : `data:application/pdf;base64,${props.existingFile}`;
-      console.log(value)
+    const openFile = async () => {
+      let value = loadedFile.value;
+      if (value === undefined) {
+        emit('opened')
+        return;
+      }
 
       const tab = window.open('', '');
       const content = (`<embed width=100% height=100%  src="${value}" type="application/pdf" />`);
@@ -77,7 +91,7 @@ export default {
           reader.onload = e => {
             loadedFile.value = e.target.result;
 
-            emit('update', {
+            emit('updated', {
               content: getContent(loadedFile.value),
               "content-type": getContentType(loadedFile.value),
             });
