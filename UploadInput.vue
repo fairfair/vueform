@@ -2,6 +2,8 @@
     <div class="mt-2">
       <div 
         class="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
+        @dragover.prevent
+        @dragenter.prevent
         @drop.prevent="dropFile"
       >
         <div class="space-y-1 text-center">
@@ -10,7 +12,7 @@
         <label for="file-upload" class="w-full cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
           <span>Sélectionnez</span>
           <input id="file-upload" name="file-upload" type="file" class="sr-only" @change="uploadFile"/>
-          <span class="pl-1 text-gray-600">ou glissez-déposez votre <br><span class="font-bold lowercase">{{ label}}</span></span>
+          <span class="pl-1 text-gray-600">ou glissez-déposez votre <br><span class="font-bold">{{ label}}</span></span>
         </label>
       </div>
       <p class="text-sm text-gray-400 italic">{{ description }}</p>
@@ -25,7 +27,7 @@
         </div>
       </div>
 
-      <button @click="openFile" class="btn-primary w-full my-3" v-if="availableFile">
+      <button @click="openFile" class="bg-indigo-100 flex w-full p-2 my-3 justify-center rounded shadow-sm" v-if="availableFile">
         Voir le fichier
           <EyeIcon class="w-6 h-6 mx-3"></EyeIcon> 
         </button>
@@ -85,20 +87,15 @@ export default {
     };
 
     const convertFileAsUrl = (files) => {
-      Array.from(files).forEach((_, index) => {
-        if (files && files[index]) {
-          let reader = new FileReader
-          reader.onload = e => {
-            loadedFile.value = e.target.result;
-
-            emit('updated', {
-              content: getContent(loadedFile.value),
-              "content-type": getContentType(loadedFile.value),
-            });
-          }
-          reader.readAsDataURL(files[index])
-        }
-      });
+      const reader = new FileReader;
+      reader.onload = e => {
+        loadedFile.value = e.target.result;
+        emit('updated', {
+          content: getContent(loadedFile.value),
+          "content-type": getContentType(loadedFile.value),
+        });
+      }
+      reader.readAsDataURL(files[0]);
     };
 
 
