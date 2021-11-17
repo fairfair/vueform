@@ -59,7 +59,7 @@ export default {
     },
     availableFile: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     disabled: {
       type: Boolean,
