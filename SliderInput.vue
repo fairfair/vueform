@@ -6,11 +6,12 @@
         {{ label }}
       </dt>
       <dd class="flex text-sm text-gray-900" :class="labelTop ? 'col-span-3' : 'col-span-2'">
-        <div class="flex-grow">
-          <input v-model="value" type="text" :name="field" @keyup.enter="submit(field, value)" class="block w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" />
+        <div class="flex-grow range-wrap">
+          <input v-model="value" type="range" :min="min" :max="max" :name="field" @keyup.enter="submit(field, value)" class="block w-full range py-2 px-3 sm:text-sm" />
+          <output class="bubble"></output>
         </div>
         <div class="mx-5 flex-shrink-0 my-auto" v-if="submitButton">
-          <button type="button" class="rounded-md font-semibold text-blue-600 hover:text-blue-500 focus:outline-none" @click="submit(field, value)">
+          <button type="button" class="rounded-md font-semibold text-blue-600 hover:text-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" @click="submit(field, value)">
             Enregistrer
           </button>
         </div>
@@ -27,7 +28,6 @@
 <script>
 
 import { useField, defineRule } from 'vee-validate';
-
 
 defineRule('required', value => {
   if (!value || !value.length) {
@@ -73,7 +73,9 @@ export default {
   props: {
     label: String,
     field: String,
-    defaultValue: String,
+    min: Number,
+    max: Number,
+    defaultValue: Number,
     labelTop: {
       type: Boolean,
       default: false
@@ -85,10 +87,34 @@ export default {
     },
   },
 
+  mounted() {
+    const allRanges = document.querySelectorAll(".range-wrap");
+    allRanges.forEach(wrap => {
+      const range = wrap.querySelector(".range");
+      const bubble = wrap.querySelector(".bubble");
+
+      range.addEventListener("input", () => {
+        setBubble(range, bubble);
+      });
+      setBubble(range, bubble);
+    });
+
+    function setBubble(range, bubble) {
+      const val = range.value;
+      const min = range.min ? range.min : 0;
+      const max = range.max ? range.max : 100;
+      const newVal = Number(((val - min) * 100) / (max - min));
+      bubble.innerHTML = val;
+
+      // Sorta magic numbers based on size of the native UI thumb
+      bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
+    }
+  },
+
   methods: {
     submit(field, value) {
       if (this.errorMessage === undefined) {
-        this.$emit('submit', field, value);
+        this.$emit('submit', field, parseInt(value));
       }
     },
   },
@@ -108,3 +134,30 @@ export default {
 }
 
 </script>
+
+<style>
+.range-wrap {
+  position: relative;
+}
+.range {
+  width: 100%;
+}
+.bubble {
+  background: black;
+  color: white;
+  padding: 4px 12px;
+  position: absolute;
+  border-radius: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: black;
+  top: -1px;
+  left: 50%;
+}
+</style>
