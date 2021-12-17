@@ -10,8 +10,8 @@
         <div class="space-y-1 text-center">
           <ArrowCircleUpIcon class="mx-auto h-12 w-12 text-gray-400"></ArrowCircleUpIcon>
           <div class="flex text-lg text-center">
-            <label :for="`file-upload-${label}`" class="w-full cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-              <span>Sélectionnez</span>
+            <label :for="`file-upload-${label}`" class="w-full cursor-pointer rounded-md text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+              <span class="font-semibold">Sélectionnez</span>
               <input :id="`file-upload-${label}`" name="file-upload" type="file" class="sr-only" @change="uploadFile"/>
               <span class="pl-1 text-gray-600">ou glissez-déposez votre {{ label}}</span>
             </label>
