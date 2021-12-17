@@ -2,8 +2,9 @@
 <template>
   <div class="py-2 sm:py-3">
     <div class="sm:grid sm:grid-cols-3 sm:gap-4">
-      <dt class="font-medium text-gray-500 my-auto" :class="labelTop ? 'col-span-3' : 'col-span-1'">
-        {{ label }}
+      <dt class="my-auto" :class="labelTop ? 'col-span-3' : 'col-span-1'">
+        <span class="block font-medium text-gray-900">{{ label }}</span>
+        <span class="text-sm text-gray-500">{{ description}}</span>
       </dt>
       <dd class="flex text-sm text-gray-900" :class="labelTop ? 'col-span-3' : 'col-span-2'">
         <div class="flex-grow">
@@ -73,6 +74,7 @@ export default {
   props: {
     label: String,
     field: String,
+    description: String,
     defaultValue: String,
     labelTop: {
       type: Boolean,

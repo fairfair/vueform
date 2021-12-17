@@ -2,7 +2,7 @@
 <template>
   <div class="py-2 sm:py-3">
     <div class="sm:grid sm:grid-cols-3 sm:gap-4">
-      <dt class="font-medium text-gray-500 my-auto" :class="labelTop ? 'col-span-3' : 'col-span-1'">
+      <dt class="font-medium text-gray-900 my-auto" :class="labelTop ? 'col-span-3' : 'col-span-1'">
         {{ label }}
       </dt>
       <dd class="flex text-sm text-gray-900" :class="labelTop ? 'col-span-3' : 'col-span-2'">
@@ -11,7 +11,7 @@
           <output class="bubble"></output>
         </div>
         <div class="mx-5 flex-shrink-0 my-auto" v-if="submitButton">
-          <button type="button" class="rounded-md font-semibold text-blue-600 hover:text-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" @click="submit(field, value)">
+          <button type="button" class="rounded-md font-semibold text-blue-600 hover:text-blue-500" @click="submit(field, value)">
             Enregistrer
           </button>
         </div>
