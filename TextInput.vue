@@ -3,12 +3,12 @@
   <div class="py-2 sm:py-3">
     <div class="sm:grid sm:grid-cols-3 sm:gap-4">
       <dt class="my-auto" :class="labelTop ? 'col-span-3' : 'col-span-1'">
-        <span class="block font-medium text-gray-900">{{ label }}</span>
+        <span class="block font-medium text-gray-900 dark:text-gray-400">{{ label }}</span>
         <span class="text-sm text-gray-500">{{ description}}</span>
       </dt>
       <dd class="flex text-sm text-gray-900" :class="labelTop ? 'col-span-3' : 'col-span-2'">
         <div class="flex-grow">
-          <input v-model="value" :type="type" :name="field" @keyup.enter="submit(field, value)" class="block w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" />
+          <input v-model="value" :type="type" :name="field" @keyup.enter="submit(field, value)" class="block w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600" />
         </div>
         <div class="mx-5 flex-shrink-0 my-auto" v-if="submitButton">
           <button type="button" class="rounded-md font-semibold text-blue-600 hover:text-blue-500 focus:outline-none" @click="submit(field, value)">
